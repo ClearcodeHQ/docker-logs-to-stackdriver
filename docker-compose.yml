@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+  # Container responsible for logs forwarding from Docker to Stackdriver
+  fluentd:
+    build: .
+    container_name: fluentd
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/run/secrets/service_key
+      - STACKDRIVER_VM_ID=vm_id_1 # Change it accorging to your needs
+      - STACKDRIVER_ZONE_ID=zone_id_1 # Change it accorging to your needs
+    secrets:
+      - service_key
+    ports:
+      - "24224:24224"
+  
+  # Sample container for example purpose, http://0.0.0.0.:8080
+  nginx:
+    image: nginx
+    container_name: nginx # Visible as a jsonPayload.container_name attribute in Stackdriver
+    ports:
+      - "8080:80"
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: 0.0.0.0:24224
+        fluentd-async-connect: "true"
+        tag: docker-nginx # Visible as a logName attribute in Stackdriver
+
+secrets:
+  service_key:
+    file: ./config/service-key.json # Service key need to be generated in GCP, please read Readme file
