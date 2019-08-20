@@ -48,7 +48,7 @@ It is always cool to read about parts which were used to build a solution, this 
 - [Nginx](https://www.nginx.com/) (just for an example purpose)
   - [Nginx's Docker Image](https://hub.docker.com/_/nginx)
 
-## How does it works
+## How does it work
 
 1. Nginx Docker is configured to push logs to STDOUT/STDERR by default
 1. Docker Compose is configured to use Fluentd Logging Driver
